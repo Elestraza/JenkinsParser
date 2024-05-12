@@ -8,12 +8,10 @@
     xml.etree.ElementTree
     psycopg2
     asyncio
+    
 Параметры класса Config задаются в стиле
-    createJob("testAPI", parameters = {
-        'bool_param': {'type': 'Boolean', 'description': 'Boolean параметр', 'defaultValue': 'true'},
-        'string_param': {'type': 'String', 'description': 'String параметр', 'defaultValue': 'default_value'}
-        # дальше по логике
-    }, description="Test case")
+    'bool_param': {'type': 'Boolean', 'description': 'Boolean параметр', 'defaultValue': 'true'},
+    'string_param': {'type': 'String', 'description': 'String параметр', 'defaultValue': 'default_value'}
 
 Функции парсера:
     getJobStatus(self, jobName) - получить статус сбоки
