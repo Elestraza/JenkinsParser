@@ -14,3 +14,11 @@
         'string_param': {'type': 'String', 'description': 'String параметр', 'defaultValue': 'default_value'}
         # дальше по логике
     }, description="Test case")
+
+Функции парсера:
+    getJobStatus(self, jobName) - получить статус сбоки
+    buildJob(self, jobName) - собрать сборку
+    createJob(self, jobName, parameters, description) - создать сборку
+    deleteJob(self, jobName) - удалить сборку
+    updateConfig(self, jobName, parameters) - обновить xml конфиг файл сборки
+    vpn(sekf) - запускиет сборку VPN
