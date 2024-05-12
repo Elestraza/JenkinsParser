@@ -1,4 +1,7 @@
 import time
+from datetime import datetime
+import asyncio
+import psycopg2
 from jenkinsapi import jenkins
 from jenkinsapi.utils.crumb_requester import CrumbRequester
 from Config import Config
@@ -8,6 +11,13 @@ class JenkinsParser:
         self.__username = uname
         self.__password = passwd
         self.__jenkins_host = jenkins_host
+        self.__conn = psycopg2.connect(
+            dbname="AstralJEnkins",
+            user="postgres",
+            password="passwd",
+            host="host",
+            port="port"
+        )
         # crumb requests
         self.__crumb=CrumbRequester(username=self.__username, password=self.__password, baseurl=f"http://{self.__jenkins_host}")
         self.__jenkins = jenkins.Jenkins(f"http://{self.__jenkins_host}", username=self.__username, password=self.__password, requester=self.__crumb)
@@ -34,14 +44,37 @@ class JenkinsParser:
             while last_build.is_running():
                 time.sleep(1)
 
+            cur = self.__conn.cursor()
+
+            # Получение developer_id по nickname из таблицы developers
+            cur.execute("SELECT id FROM developers WHERE nickname = %s", (self.__username,))
+            developer_id = cur.fetchone()[0] 
+
+            # Получение job_id по jobname из таблицы jobs
+            cur.execute("SELECT id FROM jobs WHERE jobname = %s", (jobName,))
+            job_id = cur.fetchone()[0]
+
+            # Получение status_id по name из таблицы statuses
+            cur.execute("SELECT id FROM statuses WHERE name = %s", (asyncio.run(self.buildJob(jobName)),))
+            status_id = cur.fetchone()[0]
+
+            build_time = datetime.now()
+
+            cur.execute("INSERT INTO history (developerid, buildtime, job, status) VALUES (%s, %s, %s, %s)",
+                (developer_id, build_time, job_id, status_id))
+            
+            self.__conn.commit()
+            cur.close()
+            self.__conn.close()
+
             return(f"Статус сборки {jobName}: {last_build.get_status()}. Номер сборки: {last_build.get_number()}")
         except Exception as e:
             return f"Ошибка: {e}"
 
-    async def createJob(self, jobName, parameters=None, description=""): # Создать задачу
+    async def createJob(self, jobName, parameters=None, description="Base description"): # Создать задачу
         try:
             configJk = Config()
-            config = self.__jenkins.create_job(jobName, configJk.createConfig(self.__jenkins, jobName=jobName, parameters=parameters))
+            config = self.__jenkins.create_job(jobName, configJk.createConfig(self.__jenkins, jobName=jobName, parameters=parameters,  description=description))
             print(config)
             return f"Задача {jobName} успешно создана"
         except Exception as e:
@@ -64,12 +97,12 @@ class JenkinsParser:
 
 
 '''
-Данная версия Программного обеспечения пренадлежит АО "КАЛУГА АСТРАЛ". АО "КАЛУГА АСТРАЛ" имеет полное право на изменение, использование и выпуск 
+Данная версия Программного обеспечения написана глупым студентом(автором) и пренадлежит АО "КАЛУГА АСТРАЛ". АО "КАЛУГА АСТРАЛ" имеет полное право на изменение, использование и выпуск 
 Программного продукта в любых целях, кроме создания ЯДЕРНОГО ОРУЖИЯ и захвата мира при помощи ИИ! 
 '''
 # TODO: Научить бота команде VPN, которая будет дергать job VPN. DONE
-# TODO: Прикрутить связку Developers-Jobs в БД
-# TODO: Настроить отправку данных из БД и в БД
-# TODO: Вынести логин и пароль в отдельный файл и читать его
-# TODO: Настроить ветки GIT
-# TODO: Прикрутить Docker. Образ должен сам собирать все для питона. В Dockerfile указать команду и src для requirements.txt
+# TODO: Прикрутить связку Developers-Jobs в БД. Done
+# TODO: Настроить отправку данных из БД и в БД. Done
+# TODO: Вынести логин и пароль в отдельный файл и читать его. Probobly Done
+# TODO: Настроить ветки GIT. Done
+# TODO: Прикрутить Docker. Образ должен сам собирать все для питона. В Dockerfile указать команду и src для requirements.txt. Done

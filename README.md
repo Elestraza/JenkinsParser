@@ -6,7 +6,8 @@
     jenkinsapi
     jenkinsapi.utils.crumb_requester (является частью jenkinsapi, необходима для правильной аунтитификации)
     xml.etree.ElementTree
-    
+    psycopg2
+    asyncio
 Параметры класса Config задаются в стиле
     createJob("testAPI", parameters = {
         'bool_param': {'type': 'Boolean', 'description': 'Boolean параметр', 'defaultValue': 'true'},
