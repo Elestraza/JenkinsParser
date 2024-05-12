@@ -36,6 +36,13 @@ class Config:
                 paramType = paramData.get('type')
                 paramDesc = paramData.get("description", "")
                 paramDefault = paramData.get("defaultValue", "")
+                if paramType == "GitHub":
+                    paramXml = f'''
+                        <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.38.0">
+                            <projectUrl>{paramDefault}</projectUrl>
+                            <displayName>{paramName}</displayName>
+                        </com.coravy.hudson.plugins.github.GithubProjectProperty>
+                    '''
                 if paramType == "Boolean":
                     paramXml = f'''
                         <hudson.model.BooleanParameterDefinition>
