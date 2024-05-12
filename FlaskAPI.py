@@ -57,8 +57,8 @@ def delete_job_handler():
     
 if __name__ == "__main__":
     # print(asyncio.run(jk_instance.getJobStatus("test2")))
-    # app.run(host="debianpc", port=5000)
-    print(asyncio.run(jk_instance.createJob("test1", parameters = {
-            'bool_param': {'type': 'Boolean', 'description': 'Boolean параметр', 'defaultValue': 'true'},
-            'string_param': {'type': 'String', 'description': 'String параметр', 'defaultValue': 'default_value'}
-        }, description="ЭЭЭЭЭЭ")))
+    app.run(host="debianpc", port=5000)
+    # print(asyncio.run(jk_instance.createJob("test1", parameters = {
+    #         'bool_param': {'type': 'Boolean', 'description': 'Boolean параметр', 'defaultValue': 'true'},
+    #         'string_param': {'type': 'String', 'description': 'String параметр', 'defaultValue': 'default_value'}
+    #     }, description="ЭЭЭЭЭЭ")))
