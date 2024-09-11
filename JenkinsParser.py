@@ -92,6 +92,7 @@ class JenkinsParser:
         job = self.__jenkins.get_job(jobName)
         await job.update_config(configJk.createConfig(jobName=jobName, parameters=parameters), True)
         return job
+        
     async def vpn(self):
         return self.buildJob("VPN")
 
@@ -100,9 +101,3 @@ class JenkinsParser:
 Данная версия Программного обеспечения написана глупым студентом(автором) и пренадлежит АО "КАЛУГА АСТРАЛ". АО "КАЛУГА АСТРАЛ" имеет полное право на изменение, использование и выпуск 
 Программного продукта в любых целях, кроме создания ЯДЕРНОГО ОРУЖИЯ и захвата мира при помощи ИИ! 
 '''
-# TODO: Научить бота команде VPN, которая будет дергать job VPN. DONE
-# TODO: Прикрутить связку Developers-Jobs в БД. Done
-# TODO: Настроить отправку данных из БД и в БД. Done
-# TODO: Вынести логин и пароль в отдельный файл и читать его. Probobly Done
-# TODO: Настроить ветки GIT. Done
-# TODO: Прикрутить Docker. Образ должен сам собирать все для питона. В Dockerfile указать команду и src для requirements.txt. Done
